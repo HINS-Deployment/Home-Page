@@ -17,7 +17,6 @@ app = Flask(__name__)
 import time
 
 # 读取配置文件
-@app.before_first_request
 def load_config():
     global config
     try:
@@ -63,6 +62,9 @@ def load_config():
             # 保存默认配置
             with open('config.json', 'w', encoding='utf-8') as f:
                 json.dump(config, f, indent=2, ensure_ascii=False)
+
+# 在应用初始化时立即加载配置
+load_config()
 
 # 创建通用的GitHub API请求函数
 def make_github_request(url, timeout=5):
