@@ -51,7 +51,14 @@ jobs:
 
       # 5. 创建输出目录
       - name: Prepare output directory
-        run: mkdir -p output && cp index.html background.jpg output/
+        run: |
+          mkdir -p output
+          cp index.html background.jpg output/ || echo "background.jpg not found, continuing..."
+          # 复制images目录（如果存在）
+          if [ -d "images" ]; then
+            mkdir -p output/images
+            cp -r images/* output/images/ || echo "No images found, continuing..."
+          fi
 
       # 6. 设置GitHub Pages
       - name: Setup Pages
