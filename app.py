@@ -716,8 +716,8 @@ def index():
     for project in online_projects:
         enhanced_project = project.copy()
         
-        # 处理特殊图标格式 ${http-icon}
-        if 'icon' in project and isinstance(project['icon'], str) and '${http-icon}' in project['icon']:
+        # 处理特殊图标格式 http-icon
+        if 'icon' in project and isinstance(project['icon'], str) and project['icon'] == 'http-icon':
             if 'url' in project:
                 http_icon_url = get_http_icon(project['icon'], project['url'])
                 if http_icon_url:
@@ -802,7 +802,7 @@ def get_http_icon(icon_placeholder, project_url):
         domain = f"{parsed_url.scheme}://{parsed_url.netloc}"
         
         # 替换占位符中的变量
-        icon_url = icon_placeholder.replace("${http-icon}", f"{domain}/favicon.ico")
+        icon_url = f"{domain}/favicon.ico"
         
         # 尝试获取图标
         response = requests.get(icon_url, timeout=5)

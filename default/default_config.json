@@ -30,7 +30,7 @@
       "description": "这是一个在线服务示例，服务技术栈将从GitHub获取",
       "url": "https://example.com",
       "github_repo": "username/repository",
-      "icon": "${http-icon}"
+      "icon": "http-icon"
     },
     {
       "name": "示例在线服务2", 
