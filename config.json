@@ -27,23 +27,44 @@
   "online_projects": [
     {
       "name": "H-Monitor Pro",
-      "description": "基于Flask开发的全功能电商网站，支持商品管理、订单处理和支付集成",
+      "description": "哪吒监控服务器状态仪表板，实时显示服务器运行状态和性能指标",
       "url": "https://hmp-cfsaas.hinswu.cc.cd",
-      "github_repo": "username/ecommerce-store",
-      "icon": "fa-solid fa-chart-line"
+      "github_repo": "nezhahq/nezha",
+      "icon": "${http-icon}"
+    },
+    {
+      "name": "H-Monitor Mirror",
+      "description": "哪吒监控镜像节点仪表板，提供备用的服务器状态监控服务",
+      "url": "https://hmm-cfsaas.hinswu.cc.cd",
+      "github_repo": "nezhahq/nezha",
+      "icon": "fa-solid fa-cloud-arrow-up"
+    },
+    {
+      "name": "H-Agent Gateway",
+      "description": "哪吒监控Agent安装命令转换工具，支持多平台和多节点配置",
+      "url": "https://hag.hinswu.cc.cd",
+      "github_repo": "WUHINS/H-Agent-Gateway",
+      "icon": "fa-solid fa-cloud-arrow-up"
     },
     {
       "name": "H-Sentry Pro", 
-      "description": "响应式个人博客系统，支持Markdown编辑和多用户管理",
+      "description": "服务状态监控页面，实时展示各类服务的可用性和运行状态",
       "url": "https://hsp.hinswu.cc.cd",
-      "github_repo": "username/personal-blog",
+      "github_repo": "louislam/uptime-kuma",
       "icon": "fa-solid fa-blog"
     },
     {
       "name": "H-File Gateway",
-      "description": "实时数据可视化仪表板，支持多种图表类型和数据源接入",
+      "description": "文件列表和下载服务集成核心，提供文件管理和访问功能",
       "url": "https://openlist-cfsaas.hinswu.cc.cd",
-      "github_repo": "username/data-dashboard",
+      "github_repo": "OpenListTeam/OpenList",
+      "icon": "https://openlist-cfsaas.hinswu.cc.cd/favicon.ico"
+    },
+    {
+      "name": "H-AI Gateway Pro",
+      "description": "统一的大模型接口网关，集成多种AI模型服务",
+      "url": "https://hagp.hinswu.cc.cd/",
+      "github_repo": "QuantumNous/new-api",
       "icon": "fa-solid fa-cloud-arrow-up"
     }
   ]
