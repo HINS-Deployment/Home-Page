@@ -288,7 +288,7 @@
             {% endif %}
         }
         
-        /* 背景图片 */
+        /* 横屏背景图片 (默认) */
         .bg-image {
             {% if background_exists %}
             position: absolute;
@@ -296,13 +296,31 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('{{ background_path }}');
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
             filter: blur({{ config.background.blur }}px);
             transform: scale(1.1); /* 略微放大以避免边缘出现空白 */
             {% endif %}
         }
+        
+        /* 横屏背景图片 */
+        {% if config.background.landscape_image %}
+        @media screen and (min-aspect-ratio: 1/1) {
+            .bg-image {
+                background-image: url('{{ landscape_path }}');
+            }
+        }
+        {% endif %}
+        
+        /* 竖屏背景图片 */
+        {% if config.background.portrait_image %}
+        @media screen and (max-aspect-ratio: 1/1) {
+            .bg-image {
+                background-image: url('{{ portrait_path }}');
+            }
+        }
+        {% endif %}
         
         /* 背景遮罩 */
         .bg-overlay {

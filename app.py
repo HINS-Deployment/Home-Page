@@ -744,30 +744,37 @@ def index():
                     enhanced_project['description'] = github_info_data['description']
         enhanced_online_projects.append(enhanced_project)
     
-    # 检查背景图片是否存在
-    background_image = config.get('background', {}).get('image', 'background.png')
+    # 检查背景图片是否存在 - 现在支持横屏和竖屏不同壁纸
+    landscape_image = config.get('background', {}).get('landscape_image', 'background_landscape.jpg')
+    portrait_image = config.get('background', {}).get('portrait_image', 'background_portrait.jpg')
     
     # 构建完整的背景图片路径 - 检查多个可能的位置
-    possible_paths = [
-        os.path.join(os.getcwd(), background_image),  # 当前目录
-        os.path.join(os.getcwd(), 'static', background_image)  # static目录
-    ]
+    def find_background_path(image_name):
+        possible_paths = [
+            os.path.join(os.getcwd(), image_name),  # 当前目录
+            os.path.join(os.getcwd(), 'static', image_name)  # static目录
+        ]
+        
+        for path in possible_paths:
+            if os.path.exists(path):
+                # 如果找到图片，使用相对路径供模板使用
+                if 'static' in path:
+                    return f'/static/{image_name}'
+                else:
+                    return image_name
+        return None
     
-    background_exists = False
-    background_path = background_image  # 默认使用配置中的路径
+    landscape_path = find_background_path(landscape_image)
+    portrait_path = find_background_path(portrait_image)
     
-    # 检查哪个路径是有效的
-    for path in possible_paths:
-        if os.path.exists(path):
-            background_exists = True
-            # 如果找到图片，使用相对路径供模板使用
-            if 'static' in path:
-                background_path = f'/static/{background_image}'
-            break
+    # 检查是否存在任意一张背景图片
+    background_exists = bool(landscape_path or portrait_path)
     
-    print(f"背景图片配置: {background_image}")
+    print(f"横屏背景图片配置: {landscape_image}")
+    print(f"竖屏背景图片配置: {portrait_image}")
+    print(f"横屏背景图片路径: {landscape_path}")
+    print(f"竖屏背景图片路径: {portrait_path}")
     print(f"背景图片存在: {background_exists}")
-    print(f"使用的背景图片路径: {background_path}")
     
     return render_template('index.html', 
                           github_info=github_info, 
@@ -775,7 +782,8 @@ def index():
                           online_projects=enhanced_online_projects,
                           now=datetime.now(),
                           background_exists=background_exists,
-                          background_path=background_path)
+                          landscape_path=landscape_path,
+                          portrait_path=portrait_path)
 
 @app.route('/api/config')
 def get_config():
