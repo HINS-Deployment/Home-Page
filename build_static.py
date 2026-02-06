@@ -99,41 +99,35 @@ print("正在复制其他静态资源...")
 landscape_image = config.get('background', {}).get('landscape_image', 'background.jpg')
 portrait_image = config.get('background', {}).get('portrait_image', 'background.jpg')
 
-# 创建images目录（如果不存在）
-images_dir = os.path.join(static_dir, 'images')
-os.makedirs(images_dir, exist_ok=True)
-
 # 复制横屏背景图片
 if landscape_image:
-    # 解析路径，如果图片在子目录中
-    img_dir, img_filename = os.path.split(landscape_image)
-    if img_dir:  # 如果路径包含子目录
-        src = os.path.join(here, landscape_image)
-        dst = os.path.join(static_dir, img_dir)
-        os.makedirs(dst, exist_ok=True)
-        dst_file = os.path.join(dst, img_filename)
-    else:  # 如果路径在根目录
-        src = os.path.join(here, landscape_image)
-        dst_file = os.path.join(static_dir, landscape_image)
-    
+    src = os.path.join(here, landscape_image)
     if os.path.exists(src):
+        # 解析路径，如果图片在子目录中
+        img_dir, img_filename = os.path.split(landscape_image)
+        if img_dir:  # 如果路径包含子目录
+            dst = os.path.join(static_dir, img_dir)
+            os.makedirs(dst, exist_ok=True)
+            dst_file = os.path.join(dst, img_filename)
+        else:  # 如果路径在根目录
+            dst_file = os.path.join(static_dir, landscape_image)
+        
         shutil.copy2(src, dst_file)
         print(f"已复制横屏背景图片: {landscape_image}")
 
 # 复制竖屏背景图片
 if portrait_image:
-    # 解析路径，如果图片在子目录中
-    img_dir, img_filename = os.path.split(portrait_image)
-    if img_dir:  # 如果路径包含子目录
-        src = os.path.join(here, portrait_image)
-        dst = os.path.join(static_dir, img_dir)
-        os.makedirs(dst, exist_ok=True)
-        dst_file = os.path.join(dst, img_filename)
-    else:  # 如果路径在根目录
-        src = os.path.join(here, portrait_image)
-        dst_file = os.path.join(static_dir, portrait_image)
-    
+    src = os.path.join(here, portrait_image)
     if os.path.exists(src):
+        # 解析路径，如果图片在子目录中
+        img_dir, img_filename = os.path.split(portrait_image)
+        if img_dir:  # 如果路径包含子目录
+            dst = os.path.join(static_dir, img_dir)
+            os.makedirs(dst, exist_ok=True)
+            dst_file = os.path.join(dst, img_filename)
+        else:  # 如果路径在根目录
+            dst_file = os.path.join(static_dir, portrait_image)
+        
         shutil.copy2(src, dst_file)
         print(f"已复制竖屏背景图片: {portrait_image}")
 
