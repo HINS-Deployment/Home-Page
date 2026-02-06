@@ -558,7 +558,7 @@
                             </div>
                         {% endif %}
                     </div>
-                    <div id="online-projects-content" class="space-y-4" style="display: none;">
+                    <div id="online-services-content" class="space-y-4" style="display: none;">
                         {% if online_projects %}
                             {% for project in online_projects %}
                                 <div class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-xl repo-item hover:bg-gray-100 dark:hover:bg-gray-600">
@@ -618,7 +618,7 @@
                         {% else %}
                             <div class="p-6 text-center text-gray-500 dark:text-gray-400">
                                 <i class="fa-solid fa-cloud text-4xl mb-3"></i>
-                                <p>暂无在线项目</p>
+                                <p>暂无在线服务</p>
                             </div>
                         {% endif %}
                     </div>
@@ -633,8 +633,8 @@
                                 <span class="font-medium">最近项目</span>
                                 <i class="fa-solid fa-folder-open text-primary dark:text-primary-dark"></i>
                             </button>
-                            <button id="show-online-projects-btn" class="w-full p-4 bg-gray-100 dark:bg-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex items-center justify-between">
-                                <span class="font-medium">在线项目</span>
+                            <button id="show-online-services-btn" class="w-full p-4 bg-gray-100 dark:bg-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex items-center justify-between">
+                                <span class="font-medium">在线服务</span>
                                 <i class="fa-solid fa-cloud text-primary dark:text-primary-dark"></i>
                             </button>
                         </div>
@@ -873,11 +873,11 @@
                 closeProjectTypeModal();
             });
             
-            // 显示在线项目
-            showOnlineProjectsBtn.addEventListener('click', () => {
+            // 显示在线服务
+            showOnlineServicesBtn.addEventListener('click', () => {
                 recentProjectsContent.style.display = 'none';
-                onlineProjectsContent.style.display = 'block';
-                currentProjectType.textContent = '在线项目';
+                onlineServicesContent.style.display = 'block';
+                currentProjectType.textContent = '在线服务';
                 closeProjectTypeModal();
             });
             

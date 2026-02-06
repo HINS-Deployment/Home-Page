@@ -711,10 +711,21 @@ def index():
     # 获取配置中的在线项目
     online_projects = config.get('online_projects', [])
     
-    # 为在线项目获取GitHub信息
+    # 为在线项目获取GitHub信息和处理特殊图标
     enhanced_online_projects = []
     for project in online_projects:
         enhanced_project = project.copy()
+        
+        # 处理特殊图标格式 ${http-icon}
+        if 'icon' in project and isinstance(project['icon'], str) and '${http-icon}' in project['icon']:
+            if 'url' in project:
+                http_icon_url = get_http_icon(project['icon'], project['url'])
+                if http_icon_url:
+                    enhanced_project['icon'] = http_icon_url
+                else:
+                    # 如果获取失败，移除图标配置
+                    enhanced_project.pop('icon', None)
+        
         if 'github_repo' in project and project['github_repo']:
             github_info_data = get_github_project_info(project['github_repo'])
             if github_info_data:
@@ -776,6 +787,35 @@ def serve_root_file(filename):
     
     # 对于不允许的文件类型，返回404
     abort(404)
+
+def get_http_icon(icon_placeholder, project_url):
+    """
+    从HTTP接口获取图标
+    """
+    try:
+        # 从项目URL中提取域名
+        from urllib.parse import urlparse
+        parsed_url = urlparse(project_url)
+        domain = f"{parsed_url.scheme}://{parsed_url.netloc}"
+        
+        # 替换占位符中的变量
+        icon_url = icon_placeholder.replace("${http-icon}", f"{domain}/favicon.ico")
+        
+        # 尝试获取图标
+        response = requests.get(icon_url, timeout=5)
+        if response.status_code == 200:
+            # 返回图标数据的Base64编码，用于内联显示
+            import base64
+            icon_data = base64.b64encode(response.content).decode('utf-8')
+            # 根据内容类型确定MIME类型
+            content_type = response.headers.get('content-type', 'image/x-icon')
+            return f"data:{content_type};base64,{icon_data}"
+        else:
+            # 如果获取失败，返回None
+            return None
+    except Exception as e:
+        print(f"获取HTTP图标时出错: {e}")
+        return None
 
 def generate_static_html():
     """
