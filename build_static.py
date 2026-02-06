@@ -112,8 +112,11 @@ if landscape_image:
         else:  # 如果路径在根目录
             dst_file = os.path.join(static_dir, landscape_image)
         
-        shutil.copy2(src, dst_file)
-        print(f"已复制横屏背景图片: {landscape_image}")
+        try:
+            shutil.copy2(src, dst_file)
+            print(f"已复制横屏背景图片: {landscape_image}")
+        except Exception as e:
+            print(f"复制横屏背景图片时出错: {e}")
 
 # 复制竖屏背景图片
 if portrait_image:
@@ -128,8 +131,11 @@ if portrait_image:
         else:  # 如果路径在根目录
             dst_file = os.path.join(static_dir, portrait_image)
         
-        shutil.copy2(src, dst_file)
-        print(f"已复制竖屏背景图片: {portrait_image}")
+        try:
+            shutil.copy2(src, dst_file)
+            print(f"已复制竖屏背景图片: {portrait_image}")
+        except Exception as e:
+            print(f"复制竖屏背景图片时出错: {e}")
 
 print("\n静态文件构建完成！")
 print(f"\n静态HTML文件已生成在项目根目录: {os.path.join(static_dir, 'index.html')}")
