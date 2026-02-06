@@ -38,7 +38,7 @@
       "description": "哪吒监控镜像节点仪表板，提供备用的服务器状态监控服务",
       "url": "https://hmm-cfsaas.hinswu.cc.cd",
       "github_repo": "nezhahq/nezha",
-      "icon": "http-icon"
+      "icon": "https://hag.hinswu.cc.cd/apple-touch-icon.png"
     },
     {
       "name": "H-Agent Gateway",
