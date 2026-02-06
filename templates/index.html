@@ -605,6 +605,8 @@
                                             {% if project.icon %}
                                                 {% if project.icon.startswith('http') %}
                                                     <img src="{{ project.icon }}" alt="Project Icon" class="w-5 h-5 mr-2 object-contain" onerror="this.style.display='none';" onload="this.style.display='inline-block';">
+                                                {% elif project.icon.startswith('data:') %}
+                                                    <img src="{{ project.icon }}" alt="Project Icon" class="w-5 h-5 mr-2 object-contain" onerror="this.style.display='none';" onload="this.style.display='inline-block';">
                                                 {% else %}
                                                     <i class="{{ project.icon }} mr-2 text-primary dark:text-primary-dark"></i>
                                                 {% endif %}
@@ -615,6 +617,8 @@
                                         <h3 class="text-lg font-semibold text-primary dark:text-primary-dark flex items-center">
                                             {% if project.icon %}
                                                 {% if project.icon.startswith('http') %}
+                                                    <img src="{{ project.icon }}" alt="Project Icon" class="w-5 h-5 mr-2 object-contain" onerror="this.style.display='none';" onload="this.style.display='inline-block';">
+                                                {% elif project.icon.startswith('data:') %}
                                                     <img src="{{ project.icon }}" alt="Project Icon" class="w-5 h-5 mr-2 object-contain" onerror="this.style.display='none';" onload="this.style.display='inline-block';">
                                                 {% else %}
                                                     <i class="{{ project.icon }} mr-2 text-primary dark:text-primary-dark"></i>
