@@ -1,37 +1,54 @@
 {
+  // GitHub 个人主页 URL，用于获取您的公开信息
   "github_url": "https://github.com/WUHINS",
+  
+  // 深色模式设置：auto（跟随系统）、dark（强制深色）、light（强制浅色）
   "dark_mode": "auto",
+  
+  // 个人姓名（GitHub API 调用失败时的备选显示）
   "name": "WUHINS",
+  
+  // 个人简介（GitHub API 调用失败时的备选显示）
   "bio": "Python Developer",
+  
+  // 个人介绍文件路径，支持本地 Markdown 文件
   "introduction_file": "Introduction.md",
+  
+  // 主题配色方案配置
   "theme": {
-    "primary_color": "#6a11cb",
-    "secondary_color": "#2575fc",
-    "dark_primary_color": "#a855f7",
-    "dark_secondary_color": "#60a5fa"
+    "primary_color": "#6a11cb",      // 主色调（用于按钮、重点内容等）
+    "secondary_color": "#2575fc",   // 辅助色调（用于渐变、次要强调等）
+    "dark_primary_color": "#a855f7", // 深色模式主色调
+    "dark_secondary_color": "#60a5fa" // 深色模式辅助色调
   },
+  
+  // 背景配置
   "background": {
-    "image": "background.jpg",
-    "blur": 4,
-    "overlay_opacity": 0.6,
-    "overlay_color": "#f3f4f6",
-    "dark_overlay_color": "#121212"
+    "image": "background.jpg",         // 背景图片文件名
+    "blur": 4,                        // 背景模糊程度
+    "overlay_opacity": 0.6,           // 背景遮罩透明度
+    "overlay_color": "#f3f4f6",       // 浅色模式遮罩颜色
+    "dark_overlay_color": "#121212"   // 深色模式遮罩颜色
   },
+  
+  // 联系方式配置（留空则不显示）
   "contact": {
-    "qq": "https://qm.qq.com/q/c7DY18rEju",
-    "wechat": "",
-    "bilibili": "https://space.bilibili.com/1969160969",
-    "douyin": "https://www.douyin.com/user/MS4wLjABAAAATzdjtBBrLLCn69TtPMeseuEUzztbNZzw-9f13adrfiM?relation=0&vid=7143257533807873316",
-    "xiaohongshu": "https://www.xiaohongshu.com/user/profile/6427cf87000000002901166e?xsec_token=YBcPhyaU45_o0XD1fWkS2AJAoXOxWm09mZUN0iNRSVK3E%3D&xsec_source=app_share&xhsshare=CopyLink&shareRedId=ODo0N0ZLPEA2NzUyOTgwNjg8OTg1OzxO&apptime=1760733353&share_id=f252abf542b54551b1c018c51f4a64c8&share_channel=copy_link"
+    "qq": "https://qm.qq.com/q/c7DY18rEju",     // QQ 链接
+    "wechat": "",                               // 微信（暂未填写）
+    "bilibili": "https://space.bilibili.com/1969160969", // Bilibili 链接
+    "douyin": "https://www.douyin.com/user/MS4wLjABAAAATzdjtBBrLLCn69TtPMeseuEUzztbNZzw-9f13adrfiM?relation=0&vid=7143257533807873316", // 抖音链接
+    "xiaohongshu": "https://www.xiaohongshu.com/user/profile/6427cf87000000002901166e?xsec_token=YBcPhyaU45_o0XD1fWkS2AJAoXOxWm09mZUN0iNRSVK3E%3D&xsec_source=app_share&xhsshare=CopyLink&shareRedId=ODo0N0ZLPEA2NzUyOTgwNjg8OTg1OzxO&apptime=1760733353&share_id=f252abf542b54551b1c018c51f4a64c8&share_channel=copy_link" // 小红书链接
   },
+  
+  // 已部署项目配置 - 在此处添加您的已部署项目
   "deployed_projects": [
     {
-      "name": "示例项目1",
-      "description": "这是一个已部署的项目示例，可在配置文件中添加您的部署项目",
-      "url": "https://example.com",
-      "tags": ["Web", "Flask", "Python"],
-      "deployed_date": "2024-01-01",
-      "comment": "这里可以添加项目注释"
+      "name": "示例项目1",              // 项目名称
+      "description": "这是一个已部署的项目示例，可在配置文件中添加您的部署项目", // 项目描述
+      "url": "https://example.com",    // 项目部署地址
+      "tags": ["Web", "Flask", "Python"], // 项目技术标签
+      "deployed_date": "2024-01-01",  // 部署日期
+      "comment": "这里可以添加项目注释"  // 项目备注（鼠标悬停可见）
     },
     {
       "name": "示例项目2", 
