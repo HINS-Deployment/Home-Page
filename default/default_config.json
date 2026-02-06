@@ -11,7 +11,8 @@
     "dark_secondary_color": "#60a5fa"
   },
   "background": {
-    "image": "background.jpg",
+    "landscape_image": "background_landscape.jpg",
+    "portrait_image": "background_portrait.jpg",
     "blur": 4,
     "overlay_opacity": 0.6,
     "overlay_color": "#f3f4f6",

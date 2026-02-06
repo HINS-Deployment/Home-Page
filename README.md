@@ -218,11 +218,13 @@ GitHub Actions 配置文件可参考[个人项目主页](https://github.com/SRIn
   - `dark_primary_color`：深色模式主色调
   - `dark_secondary_color`：深色模式辅助色调
 - `background`：背景图片和视觉效果配置
-  - `image`：背景图片文件名
+  - `landscape_image`：横屏设备背景图片文件名
+  - `portrait_image`：竖屏设备背景图片文件名
   - `blur`：背景模糊程度
   - `overlay_opacity`：覆盖层透明度
   - `overlay_color`：浅色模式覆盖层颜色
   - `dark_overlay_color`：深色模式覆盖层颜色
+  - **新增功能**：系统会根据设备方向自动选择合适的背景图片，横屏设备使用 landscape_image，竖屏设备使用 portrait_image
 - `contact`：联系方式配置，支持多种社交平台
 - `online_projects`：在线项目列表，展示您的部署项目
 
