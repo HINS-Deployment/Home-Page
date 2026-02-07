@@ -45,5 +45,19 @@
       "github_repo": "username/repository2",
       "icon": "fa-solid fa-globe"
     }
+  ],
+  "games": [
+    {
+      "name": "示例游戏1",
+      "description": "这是一个游戏示例",
+      "icon": "images/games/example-game1.png",
+      "details_file": "games/example-game1.md"
+    },
+    {
+      "name": "示例游戏2",
+      "description": "另一个游戏示例",
+      "icon": "images/games/example-game2.png",
+      "details_file": "games/example-game2.md"
+    }
   ]
 }

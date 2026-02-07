@@ -592,6 +592,31 @@
                         <canvas id="activityChart"></canvas>
                     </div>
                 </div>
+                
+                <!-- 玩过的游戏 -->
+                <div class="glass-panel bg-white/30 dark:bg-gray-800/30 rounded-2xl shadow-xl p-6 mt-6 card-hover animate-fade-in" style="animation-delay: 0.3s;">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fa-solid fa-gamepad text-primary dark:text-primary-dark mr-2"></i>
+                        玩过的游戏
+                    </h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        {% for game in config.games[:9] %}
+                            <div class="aspect-square bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 game-item" data-game-index="{{ loop.index0 }}">
+                                {% if game.icon %}
+                                    {% if game.icon == 'http-icon' %}
+                                        <i class="fa-solid fa-globe text-2xl text-gray-500"></i>
+                                    {% else %}
+                                        <img src="{{ game.icon }}" alt="{{ game.name }}" class="w-12 h-12 object-cover rounded-lg">
+                                    {% endif %}
+                                {% else %}
+                                    <div class="w-12 h-12 border-2 border-dashed border-gray-400 rounded-lg flex items-center justify-center">
+                                        <i class="fa-solid fa-gamepad text-gray-400 text-xl"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 
             <!-- 右侧内容区域 -->
@@ -925,6 +950,192 @@
             document.querySelectorAll('.card-hover:not(.animate-fade-in)').forEach(card => {
                 observer.observe(card);
             });
+            
+            // 游戏详情弹窗功能
+            const gameItems = document.querySelectorAll('.game-item');
+            const gameDetailModal = document.getElementById('game-detail-modal');
+            const gameModalBackdrop = document.getElementById('game-modal-backdrop');
+            const gameModalContent = gameDetailModal.querySelector('.glass-panel');
+            const gameCarouselContainer = document.getElementById('game-carousel-container');
+            const gameCarouselPrev = document.getElementById('game-carousel-prev');
+            const gameCarouselNext = document.getElementById('game-carousel-next');
+            const gameDetailName = document.getElementById('game-detail-name');
+            const gameDetailDescription = document.getElementById('game-detail-description');
+            const gameDetailContent = document.getElementById('game-detail-content');
+            const closeGameModalBtn = document.getElementById('close-game-modal-btn');
+            
+            let currentGameIndex = 0;
+            const games = {{ config.games | tojson }};
+            
+            // 初始化游戏轮播
+            function initGameCarousel() {
+                gameCarouselContainer.innerHTML = '';
+                games.forEach((game, index) => {
+                    const gameItem = document.createElement('div');
+                    gameItem.className = 'flex flex-col items-center transition-all duration-300 game-carousel-item';
+                    gameItem.dataset.gameIndex = index;
+                    
+                    // 游戏图标
+                    const iconDiv = document.createElement('div');
+                    iconDiv.className = 'w-16 h-16 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-2';
+                    
+                    if (game.icon) {
+                        if (game.icon === 'http-icon') {
+                            iconDiv.innerHTML = '<i class="fa-solid fa-globe text-2xl text-gray-500"></i>';
+                        } else {
+                            iconDiv.innerHTML = `<img src="${game.icon}" alt="${game.name}" class="w-12 h-12 object-cover rounded-lg">`;
+                        }
+                    } else {
+                        iconDiv.innerHTML = '<div class="w-12 h-12 border-2 border-dashed border-gray-400 rounded-lg flex items-center justify-center"><i class="fa-solid fa-gamepad text-gray-400 text-xl"></i></div>';
+                    }
+                    
+                    // 游戏名称
+                    const nameDiv = document.createElement('div');
+                    nameDiv.className = 'text-sm font-medium text-gray-700 dark:text-gray-300 text-center';
+                    nameDiv.textContent = game.name;
+                    
+                    gameItem.appendChild(iconDiv);
+                    gameItem.appendChild(nameDiv);
+                    gameCarouselContainer.appendChild(gameItem);
+                });
+                
+                updateGameCarousel();
+            }
+            
+            // 更新游戏轮播显示
+            function updateGameCarousel() {
+                const items = gameCarouselContainer.querySelectorAll('.game-carousel-item');
+                const maxVisible = window.innerWidth < 768 ? 3 : 5; // 手机显示3个，电脑显示5个
+                
+                items.forEach((item, index) => {
+                    const distance = Math.abs(index - currentGameIndex);
+                    const maxDistance = Math.floor(maxVisible / 2);
+                    
+                    if (distance <= maxDistance) {
+                        item.style.display = 'flex';
+                        const scale = 1 - (distance * 0.2);
+                        const opacity = 1 - (distance * 0.3);
+                        item.style.transform = `scale(${scale})`;
+                        item.style.opacity = opacity;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+            
+            // 加载游戏详情
+            function loadGameDetail(index) {
+                const game = games[index];
+                if (!game) return;
+                
+                gameDetailName.textContent = game.name;
+                gameDetailDescription.textContent = game.description || '';
+                
+                // 加载游戏详情文件
+                if (game.details_file) {
+                    fetch(game.details_file)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('File not found');
+                            }
+                            return response.text();
+                        })
+                        .then(content => {
+                            gameDetailContent.innerHTML = content;
+                            applyMarkdownStyles();
+                        })
+                        .catch(error => {
+                            console.error('加载游戏详情失败:', error);
+                            gameDetailContent.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-center">该游戏未填写说明</p>';
+                        });
+                } else {
+                    gameDetailContent.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-center">该游戏未填写说明</p>';
+                }
+            }
+            
+            // 打开游戏详情弹窗
+            function openGameDetailModal(index) {
+                currentGameIndex = index;
+                gameDetailModal.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    gameModalBackdrop.classList.add('modal-backdrop');
+                }, 10);
+                
+                setTimeout(() => {
+                    gameModalContent.classList.add('modal-enter');
+                    initGameCarousel();
+                    loadGameDetail(index);
+                }, 50);
+            }
+            
+            // 关闭游戏详情弹窗
+            function closeGameDetailModal() {
+                gameModalContent.classList.remove('modal-enter');
+                gameModalContent.classList.add('modal-leave');
+                
+                gameModalBackdrop.classList.remove('modal-backdrop');
+                gameModalBackdrop.classList.add('modal-backdrop-leave');
+                
+                setTimeout(() => {
+                    gameDetailModal.classList.add('hidden');
+                    gameModalContent.classList.remove('modal-leave');
+                    gameModalBackdrop.classList.remove('modal-backdrop-leave');
+                }, 300);
+            }
+            
+            // 游戏轮播切换
+            function nextGame() {
+                currentGameIndex = (currentGameIndex + 1) % games.length;
+                updateGameCarousel();
+                loadGameDetail(currentGameIndex);
+            }
+            
+            function prevGame() {
+                currentGameIndex = (currentGameIndex - 1 + games.length) % games.length;
+                updateGameCarousel();
+                loadGameDetail(currentGameIndex);
+            }
+            
+            // 事件监听
+            gameItems.forEach((item, index) => {
+                item.addEventListener('click', () => openGameDetailModal(index));
+            });
+            
+            gameCarouselPrev.addEventListener('click', prevGame);
+            gameCarouselNext.addEventListener('click', nextGame);
+            
+            closeGameModalBtn.addEventListener('click', closeGameDetailModal);
+            
+            gameDetailModal.addEventListener('click', (e) => {
+                if (e.target === gameDetailModal) {
+                    closeGameDetailModal();
+                }
+            });
+            
+            // 支持滑动切换
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            gameCarouselContainer.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+            
+            gameCarouselContainer.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                const diff = touchStartX - touchEndX;
+                
+                if (Math.abs(diff) > 50) { // 滑动距离阈值
+                    if (diff > 0) {
+                        nextGame();
+                    } else {
+                        prevGame();
+                    }
+                }
+            });
+            
+            // 窗口大小变化时更新轮播
+            window.addEventListener('resize', updateGameCarousel);
             
             // 项目类型切换功能
             const projectsHeader = document.getElementById('projects-header');

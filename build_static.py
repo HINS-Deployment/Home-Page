@@ -47,6 +47,17 @@ else:
         print("警告：default/default_config.json也不存在，使用默认背景图片")
         background_image = 'background.jpg'
 
+# 检查游戏详情文件是否存在，如果不存在则修改配置
+print("正在检查游戏详情文件...")
+if 'games' in config:
+    for game in config['games']:
+        if 'details_file' in game and game['details_file']:
+            details_file_path = os.path.join(here, game['details_file'])
+            if not os.path.exists(details_file_path):
+                print(f"警告：游戏详情文件不存在: {game['details_file']}")
+                # 标记该游戏没有详情文件
+                game['details_file'] = None
+
 # 导入app.py并使用Flask测试客户端
 try:
     # 动态导入app.py

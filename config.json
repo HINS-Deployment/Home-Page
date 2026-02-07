@@ -75,5 +75,61 @@
       "github_repo": "helloxz/onenav",
       "icon": "http-icon"
     }
+  ],
+  "games": [
+    {
+      "name": "原神",
+      "description": "开放世界冒险RPG",
+      "icon": "images/games/genshin-impact.png",
+      "details_file": "games/genshin-impact.md"
+    },
+    {
+      "name": "崩坏：星穹铁道",
+      "description": "太空科幻RPG",
+      "icon": "images/games/honkai-star-rail.png",
+      "details_file": "games/honkai-star-rail.md"
+    },
+    {
+      "name": "崩坏3",
+      "description": "动作角色扮演游戏",
+      "icon": "images/games/honkai-3.png",
+      "details_file": "games/honkai-3.md"
+    },
+    {
+      "name": "明日方舟",
+      "description": "塔防策略游戏",
+      "icon": "images/games/arknights.png",
+      "details_file": "games/arknights.md"
+    },
+    {
+      "name": "碧蓝航线",
+      "description": "二次元战舰收集游戏",
+      "icon": "images/games/azur-lane.png",
+      "details_file": "games/azur-lane.md"
+    },
+    {
+      "name": "公主连结",
+      "description": "二次元RPG手游",
+      "icon": "images/games/princess-connect.png",
+      "details_file": "games/princess-connect.md"
+    },
+    {
+      "name": "Fate/Grand Order",
+      "description": "命运冠位指定",
+      "icon": "images/games/fgo.png",
+      "details_file": "games/fgo.md"
+    },
+    {
+      "name": "阴阳师",
+      "description": "和风RPG手游",
+      "icon": "images/games/onmyoji.png",
+      "details_file": "games/onmyoji.md"
+    },
+    {
+      "name": "王者荣耀",
+      "description": "MOBA竞技游戏",
+      "icon": "images/games/honor-of-kings.png",
+      "details_file": "games/honor-of-kings.md"
+    }
   ]
 }
