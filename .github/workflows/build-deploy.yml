@@ -65,6 +65,12 @@ jobs:
             mkdir -p output/images
             cp -r images/* output/images/ || echo "No images found, continuing..."
           fi
+          
+          # 复制games目录（如果存在）
+          if [ -d "games" ]; then
+            mkdir -p output/games
+            cp -r games/* output/games/ || echo "No games found, continuing..."
+          fi
 
       # 6. 设置GitHub Pages
       - name: Setup Pages
