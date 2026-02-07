@@ -66,62 +66,118 @@ def load_config():
 # 在应用初始化时立即加载配置
 load_config()
 
-# 创建通用的GitHub API请求函数
-def make_github_request(url, timeout=5):
+# 创建通用的GitHub API请求函数（带重试机制）
+def make_github_request(url, timeout=10, max_retries=3, retry_delay=1):
+    import time
+    
+    # 准备请求头
+    headers = {'Accept': 'application/vnd.github.v3+json'}
+    github_token = ''
+    
+    # 首先尝试从github_token.txt文件中读取令牌
+    token_file = os.path.join(app.root_path, 'github_token.txt')
     try:
-        # 配置requests不验证SSL证书（解决本地环境中的证书验证问题）
-        import ssl
-        ssl._create_default_https_context = ssl._create_unverified_context
-        
-        # 准备请求头
-        headers = {'Accept': 'application/vnd.github.v3+json'}
-        github_token = ''
-        
-        # 首先尝试从github_token.txt文件中读取令牌
-        token_file = os.path.join(app.root_path, 'github_token.txt')
-        try:
-            if os.path.exists(token_file):
-                with open(token_file, 'r', encoding='utf-8') as f:
-                    github_token = f.read().strip()
-                # 移除可能的空白字符和引号
-                github_token = github_token.replace('"', '').replace("'", '')
-                print(f"从github_token.txt文件中读取令牌成功")
-            else:
-                # 如果文件不存在，尝试从配置中获取
-                github_token = config.get('github_token', '')
-                print("github_token.txt文件不存在，尝试从配置中获取令牌")
-        except Exception as e:
-            print(f"读取GitHub令牌时出错: {e}")
-            # 出错时，尝试从配置中获取
-            github_token = config.get('github_token', '')
-        
-        # 如果配置了GitHub令牌，添加到请求头
-        if github_token:
-            headers['Authorization'] = f'token {github_token}'
-            print(f"使用GitHub令牌进行认证")
+        if os.path.exists(token_file):
+            with open(token_file, 'r', encoding='utf-8') as f:
+                github_token = f.read().strip()
+            # 移除可能的空白字符和引号
+            github_token = github_token.replace('"', '').replace("'", '')
+            print(f"从github_token.txt文件中读取令牌成功")
         else:
-            print("未使用GitHub令牌，使用匿名访问")
-        
-        # 发送请求
-        response = requests.get(url, headers=headers, timeout=timeout, verify=False)
-        print(f"GitHub API请求: {url}, 状态码: {response.status_code}")
-        
-        # 检查是否达到速率限制
-        if response.status_code == 403 and 'rate limit' in response.text.lower():
-            print("GitHub API速率限制已达，建议配置GitHub令牌")
-        
-        return response
+            # 如果文件不存在，尝试从配置中获取
+            github_token = config.get('github_token', '')
+            print("github_token.txt文件不存在，尝试从配置中获取令牌")
     except Exception as e:
-        print(f"GitHub API请求异常: {e}")
-        # 创建一个模拟的响应对象
-        class MockResponse:
-            def __init__(self):
-                self.status_code = 500
-                self.text = "模拟错误响应"
-        return MockResponse()
+        print(f"读取GitHub令牌时出错: {e}")
+        # 出错时，尝试从配置中获取
+        github_token = config.get('github_token', '')
+    
+    # 如果配置了GitHub令牌，添加到请求头
+    if github_token:
+        headers['Authorization'] = f'token {github_token}'
+        print(f"使用GitHub令牌进行认证")
+    else:
+        print("未使用GitHub令牌，使用匿名访问")
+    
+    # 重试机制
+    for attempt in range(max_retries):
+        try:
+            # 配置requests不验证SSL证书（解决本地环境中的证书验证问题）
+            import ssl
+            ssl._create_default_https_context = ssl._create_unverified_context
+            
+            # 发送请求
+            response = requests.get(url, headers=headers, timeout=timeout, verify=False)
+            print(f"GitHub API请求: {url}, 状态码: {response.status_code}")
+            
+            # 检查是否达到速率限制
+            if response.status_code == 403:
+                if 'rate limit' in response.text.lower():
+                    print("GitHub API速率限制已达，建议配置GitHub令牌")
+                    # 如果是速率限制，等待更长时间再重试
+                    if attempt < max_retries - 1:
+                        wait_time = retry_delay * (attempt + 1) * 2  # 指数退避
+                        print(f"速率限制，等待 {wait_time} 秒后重试...")
+                        time.sleep(wait_time)
+                        continue
+                else:
+                    # 其他403错误，可能是权限问题
+                    print("GitHub API权限错误，可能令牌无效或权限不足")
+            
+            # 检查是否需要重试（服务器错误）
+            if response.status_code >= 500 and attempt < max_retries - 1:
+                print(f"服务器错误，等待 {retry_delay} 秒后重试...")
+                time.sleep(retry_delay)
+                continue
+            
+            return response
+            
+        except requests.exceptions.Timeout:
+            print(f"GitHub API请求超时 (尝试 {attempt + 1}/{max_retries})")
+            if attempt < max_retries - 1:
+                print(f"等待 {retry_delay} 秒后重试...")
+                time.sleep(retry_delay)
+            else:
+                print("所有重试尝试均超时")
+                
+        except requests.exceptions.ConnectionError as e:
+            print(f"GitHub API连接错误 (尝试 {attempt + 1}/{max_retries}): {e}")
+            if attempt < max_retries - 1:
+                print(f"等待 {retry_delay} 秒后重试...")
+                time.sleep(retry_delay)
+            else:
+                print("所有重试尝试均失败")
+                
+        except Exception as e:
+            print(f"GitHub API请求异常 (尝试 {attempt + 1}/{max_retries}): {e}")
+            if attempt < max_retries - 1:
+                print(f"等待 {retry_delay} 秒后重试...")
+                time.sleep(retry_delay)
+            else:
+                print("所有重试尝试均失败")
+    
+    # 所有重试都失败，返回模拟响应
+    print(f"GitHub API请求失败，所有 {max_retries} 次重试均失败")
+    class MockResponse:
+        def __init__(self):
+            self.status_code = 503
+            self.text = "服务暂时不可用"
+    return MockResponse()
 
-# 从 GitHub API 获取用户信息
+# 从 GitHub API 获取用户信息（带缓存）
 def get_github_user_info():
+    global cached_github_data
+    
+    start_time = time.time()
+    
+    # 检查缓存是否有效
+    current_time = start_time
+    if (cached_github_data['user_info'] and 
+        cached_github_data['repos'] and 
+        (current_time - cached_github_data['timestamp'] < CACHE_DURATION)):
+        print("使用缓存的GitHub用户信息")
+        return cached_github_data['user_info']
+    
     print("开始获取GitHub用户信息")
     github_url = config.get('github_url', 'https://github.com/example')
     username = github_url.rstrip('/').split('/')[-1]
@@ -132,7 +188,7 @@ def get_github_user_info():
         print(f"准备请求GitHub API: https://api.github.com/users/{username}")
         
         # 获取用户信息
-        user_response = make_github_request(f'https://api.github.com/users/{username}')
+        user_response = make_github_request(f'https://api.github.com/users/{username}', timeout=15)
         print(f"GitHub API响应状态码: {user_response.status_code}")
 
         if user_response.status_code == 200:
@@ -140,9 +196,12 @@ def get_github_user_info():
             print(f"成功获取用户数据: {user_data.get('name')}, {user_data.get('login')}")
 
             # 获取用户的仓库信息
-            repos_response = make_github_request(f'https://api.github.com/users/{username}/repos?sort=pushed&per_page=100')
+            repos_response = make_github_request(f'https://api.github.com/users/{username}/repos?sort=pushed&per_page=100', timeout=20)
             if repos_response.status_code == 200:
                 repos = repos_response.json()
+                
+                # 缓存仓库信息
+                cached_github_data['repos'] = repos
 
                 # 获取总仓库数和总 stars 数
                 total_repos = len(repos)
@@ -161,7 +220,8 @@ def get_github_user_info():
                 # 分析用户的技术栈
                 tech_stack = analyze_tech_stack(repos)
 
-                return {
+                # 构建用户信息
+                user_info = {
                     "avatar_url": user_data.get('avatar_url'),
                     "name": user_data.get('name') or username,
                     "bio": config.get('bio', 'Python Developer'),  # 使用配置文件中的bio
@@ -172,13 +232,22 @@ def get_github_user_info():
                     "activity_data": activity_data,
                     "tech_stack": tech_stack
                 }
+                
+                # 更新缓存
+                cached_github_data['user_info'] = user_info
+                cached_github_data['timestamp'] = current_time
+                
+                elapsed_time = time.time() - start_time
+                print(f"GitHub用户信息获取完成并已缓存，耗时: {elapsed_time:.2f}秒")
+                return user_info
     except Exception as e:
-        print(f"GitHub API调用异常: {type(e).__name__}: {str(e)}")
+        elapsed_time = time.time() - start_time
+        print(f"获取GitHub用户信息异常 (耗时: {elapsed_time:.2f}秒): {type(e).__name__}: {str(e)}")
         import traceback
         traceback.print_exc()
     
     # 如果获取失败，返回默认值
-    return {
+    default_data = {
         "avatar_url": "https://avatars.githubusercontent.com/u/1000000?v=4",
         "name": config.get('name', 'Example User'),
         "bio": config.get('bio', 'Python Developer'),
@@ -194,6 +263,15 @@ def get_github_user_info():
             {"name": "Flask", "color": "#1e40af"}
         ]
     }
+    
+    # 缓存默认数据，避免频繁重试
+    cached_github_data['user_info'] = default_data
+    cached_github_data['timestamp'] = time.time()
+    
+    elapsed_time = time.time() - start_time
+    print(f"GitHub用户信息获取失败，返回默认数据 (耗时: {elapsed_time:.2f}秒)")
+    
+    return default_data
 
 # 获取用户的GitHub活动数据（过去12个月的推送统计）
 # 使用GitHub Events API获取更准确的活动数据
@@ -372,20 +450,28 @@ def get_github_activity_data(username, repos=None):
     # 如果发生任何错误，返回默认数据
     return [65, 59, 80, 81, 56, 55, 70, 65, 85, 75, 60, 75]  # 默认数据
 
+# GitHub数据缓存系统
+CACHE_DURATION = 3600  # 缓存1小时
+
+# 缓存数据结构
+cached_github_data = {
+    'user_info': None,
+    'repos': None,
+    'tech_stack': None,
+    'timestamp': 0
+}
+
 # 分析用户的技术栈
 # 限制处理的仓库数量，优化性能
-cached_tech_stack = None
-cached_timestamp = 0
-
-CACHE_DURATION = 3600  # 缓存1小时
 def analyze_tech_stack(repos):
-    global cached_tech_stack, cached_timestamp
+    global cached_github_data
     
-    # 检查缓存是否有效（如果启用了缓存）
+    # 检查缓存是否有效
     current_time = time.time()
-    if cached_tech_stack and (current_time - cached_timestamp < CACHE_DURATION):
+    if (cached_github_data['tech_stack'] and 
+        (current_time - cached_github_data['timestamp'] < CACHE_DURATION)):
         print("使用缓存的技术栈数据")
-        return cached_tech_stack
+        return cached_github_data['tech_stack']
     
     try:
         print("开始分析用户的技术栈")
@@ -432,14 +518,14 @@ def analyze_tech_stack(repos):
         if not language_stats:
             print("没有获取到语言数据，返回默认技术栈")
             # 更新缓存
-            cached_tech_stack = [
+            cached_github_data['tech_stack'] = [
                 {"name": "Python", "color": "#6a11cb"},
                 {"name": "JavaScript", "color": "#2575fc"},
                 {"name": "HTML/CSS", "color": "#560bad"},
                 {"name": "Flask", "color": "#1e40af"}
             ]
-            cached_timestamp = time.time()
-            return cached_tech_stack
+            cached_github_data['timestamp'] = time.time()
+            return cached_github_data['tech_stack']
         
         # 计算每种语言的使用比例
         language_ratios = {}
@@ -564,8 +650,8 @@ def analyze_tech_stack(repos):
             tech_stack = tech_stack[:10]
         
         # 更新缓存
-        cached_tech_stack = tech_stack
-        cached_timestamp = time.time()
+        cached_github_data['tech_stack'] = tech_stack
+        cached_github_data['timestamp'] = time.time()
         
         print(f"分析完成的技术栈: {[tech['name'] for tech in tech_stack]}")
         return tech_stack
@@ -590,7 +676,7 @@ def get_readme_content(username):
         # 尝试获取同名仓库的 README（main分支）
         readme_url_main = f'https://raw.githubusercontent.com/{username}/{username}/main/README.md'
         print(f"尝试获取README URL (main): {readme_url_main}")
-        readme_response = requests.get(readme_url_main, timeout=5, verify=False)
+        readme_response = requests.get(readme_url_main, timeout=10, verify=False)
         print(f"README响应状态码 (main): {readme_response.status_code}")
         
         if readme_response.status_code == 200:
@@ -610,7 +696,7 @@ def get_readme_content(username):
         # 尝试其他分支（master）
         readme_url_master = f'https://raw.githubusercontent.com/{username}/{username}/master/README.md'
         print(f"尝试获取README URL (master): {readme_url_master}")
-        readme_response = requests.get(readme_url_master, timeout=5, verify=False)
+        readme_response = requests.get(readme_url_master, timeout=10, verify=False)
         print(f"README响应状态码 (master): {readme_response.status_code}")
         
         if readme_response.status_code == 200:
@@ -819,7 +905,7 @@ def get_http_icon(icon_placeholder, project_url):
         icon_url = f"{domain}/favicon.ico"
         
         # 尝试获取图标
-        response = requests.get(icon_url, timeout=5)
+        response = requests.get(icon_url, timeout=10)
         if response.status_code == 200:
             # 返回图标数据的Base64编码，用于内联显示
             import base64
