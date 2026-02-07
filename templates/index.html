@@ -27,6 +27,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <!-- Marked.js for Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- Tailwind Typography Plugin -->
     <script>
         // 应用 Markdown 样式的函数
@@ -1047,8 +1049,10 @@
                             return response.text();
                         })
                         .then(content => {
-                            gameDetailContent.innerHTML = content;
-                            applyMarkdownStyles();
+                            // 使用Marked.js渲染Markdown
+                            const renderedContent = marked.parse(content);
+                            gameDetailContent.innerHTML = renderedContent;
+                            applyGameMarkdownStyles();
                         })
                         .catch(error => {
                             console.error('加载游戏详情失败:', error);
@@ -1057,6 +1061,100 @@
                 } else {
                     gameDetailContent.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-center">该游戏未填写说明</p>';
                 }
+            }
+            
+            // 为游戏详情应用Markdown样式
+            function applyGameMarkdownStyles() {
+                const gameContent = document.getElementById('game-detail-content');
+                if (!gameContent) return;
+                
+                // 应用Tailwind样式到Markdown元素
+                const h1Elements = gameContent.querySelectorAll('h1');
+                const h2Elements = gameContent.querySelectorAll('h2');
+                const h3Elements = gameContent.querySelectorAll('h3');
+                const pElements = gameContent.querySelectorAll('p');
+                const ulElements = gameContent.querySelectorAll('ul');
+                const olElements = gameContent.querySelectorAll('ol');
+                const liElements = gameContent.querySelectorAll('li');
+                const codeElements = gameContent.querySelectorAll('code');
+                const preElements = gameContent.querySelectorAll('pre');
+                const aElements = gameContent.querySelectorAll('a');
+                const imgElements = gameContent.querySelectorAll('img');
+                const blockquoteElements = gameContent.querySelectorAll('blockquote');
+                const hrElements = gameContent.querySelectorAll('hr');
+                const tableElements = gameContent.querySelectorAll('table');
+                
+                // 标题样式
+                h1Elements.forEach(el => {
+                    el.className = 'text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4 mt-6';
+                });
+                h2Elements.forEach(el => {
+                    el.className = 'text-xl font-semibold text-gray-800 dark:text-gray-200 mb-3 mt-5';
+                });
+                h3Elements.forEach(el => {
+                    el.className = 'text-lg font-medium text-gray-800 dark:text-gray-200 mb-2 mt-4';
+                });
+                
+                // 段落样式
+                pElements.forEach(el => {
+                    el.className = 'text-gray-700 dark:text-gray-300 mb-3 leading-relaxed';
+                });
+                
+                // 列表样式
+                ulElements.forEach(el => {
+                    el.className = 'list-disc list-inside mb-3 text-gray-700 dark:text-gray-300';
+                });
+                olElements.forEach(el => {
+                    el.className = 'list-decimal list-inside mb-3 text-gray-700 dark:text-gray-300';
+                });
+                liElements.forEach(el => {
+                    el.className = 'mb-1';
+                });
+                
+                // 代码样式
+                codeElements.forEach(el => {
+                    if (!el.parentElement || el.parentElement.tagName !== 'PRE') {
+                        el.className = 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-1 py-0.5 rounded text-sm';
+                    }
+                });
+                preElements.forEach(el => {
+                    el.className = 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-3 rounded-lg overflow-x-auto mb-3 text-sm';
+                });
+                
+                // 链接样式
+                aElements.forEach(el => {
+                    el.className = 'text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline';
+                });
+                
+                // 图片样式
+                imgElements.forEach(el => {
+                    el.className = 'max-w-full h-auto rounded-lg shadow-md mb-3';
+                });
+                
+                // 引用样式
+                blockquoteElements.forEach(el => {
+                    el.className = 'border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic text-gray-600 dark:text-gray-400 mb-3';
+                });
+                
+                // 水平线样式
+                hrElements.forEach(el => {
+                    el.className = 'my-4 border-gray-300 dark:border-gray-600';
+                });
+                
+                // 表格样式
+                tableElements.forEach(el => {
+                    el.className = 'min-w-full border-collapse mb-3';
+                    const thElements = el.querySelectorAll('th');
+                    const tdElements = el.querySelectorAll('td');
+                    
+                    thElements.forEach(th => {
+                        th.className = 'border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 font-medium';
+                    });
+                    
+                    tdElements.forEach(td => {
+                        td.className = 'border border-gray-300 dark:border-gray-600 px-3 py-2 text-gray-700 dark:text-gray-300';
+                    });
+                });
             }
             
             // 打开游戏详情弹窗
