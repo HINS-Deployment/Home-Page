@@ -606,13 +606,13 @@
                             <div class="aspect-square bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 game-item" data-game-index="{{ loop.index0 }}">
                                 {% if game.icon %}
                                     {% if game.icon == 'http-icon' %}
-                                        <i class="fa-solid fa-globe text-2xl text-gray-500"></i>
+                                        <i class="fa-solid fa-globe text-3xl text-gray-500"></i>
                                     {% else %}
-                                        <img src="{{ game.icon }}" alt="{{ game.name }}" class="w-12 h-12 object-cover rounded-lg">
+                                        <img src="{{ game.icon }}" alt="{{ game.name }}" class="w-full h-full object-cover rounded-lg">
                                     {% endif %}
                                 {% else %}
-                                    <div class="w-12 h-12 border-2 border-dashed border-gray-400 rounded-lg flex items-center justify-center">
-                                        <i class="fa-solid fa-gamepad text-gray-400 text-xl"></i>
+                                    <div class="w-full h-full border-2 border-dashed border-gray-400 rounded-lg flex items-center justify-center">
+                                        <i class="fa-solid fa-gamepad text-gray-400 text-3xl"></i>
                                     </div>
                                 {% endif %}
                             </div>
@@ -984,12 +984,12 @@
                     
                     if (game.icon) {
                         if (game.icon === 'http-icon') {
-                            iconDiv.innerHTML = '<i class="fa-solid fa-globe text-2xl text-gray-500"></i>';
+                            iconDiv.innerHTML = '<i class="fa-solid fa-globe text-3xl text-gray-500"></i>';
                         } else {
-                            iconDiv.innerHTML = `<img src="${game.icon}" alt="${game.name}" class="w-12 h-12 object-cover rounded-lg">`;
+                            iconDiv.innerHTML = `<img src="${game.icon}" alt="${game.name}" class="w-full h-full object-cover rounded-lg">`;
                         }
                     } else {
-                        iconDiv.innerHTML = '<div class="w-12 h-12 border-2 border-dashed border-gray-400 rounded-lg flex items-center justify-center"><i class="fa-solid fa-gamepad text-gray-400 text-xl"></i></div>';
+                        iconDiv.innerHTML = '<div class="w-full h-full border-2 border-dashed border-gray-400 rounded-lg flex items-center justify-center"><i class="fa-solid fa-gamepad text-gray-400 text-3xl"></i></div>';
                     }
                     
                     // 游戏名称
