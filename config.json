@@ -71,7 +71,7 @@
     {
       "name": "HINS' SyncTV",
       "description": "自部署同步观影、直播、聊天平台",
-      "url": "https://synctv.hinswu.dpdns.org/",
+      "url": "https://synctv.hinswu.cc.cd/",
       "github_repo": "synctv-org/synctv",
       "icon": "http-icon"
     },
