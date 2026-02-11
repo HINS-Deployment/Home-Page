@@ -69,6 +69,13 @@
       "icon": "http-icon"
     },
     {
+      "name": "HINS' SyncTV",
+      "description": "自部署同步观影、直播、聊天平台",
+      "url": "https://synctv.hinswu.dpdns.org/",
+      "github_repo": "synctv-org/synctv",
+      "icon": "http-icon"
+    },
+    {
       "name": "个人书签页",
       "description": "个人网页书签集成管理",
       "url": "https://onenav.hinswu.dpdns.org/",
