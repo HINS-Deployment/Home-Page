@@ -81,6 +81,13 @@
       "url": "https://onenav.hinswu.dpdns.org/",
       "github_repo": "helloxz/onenav",
       "icon": "http-icon"
+    },
+    {
+      "name": "CloudPaste",
+      "description": "现代化的文件分享和内容管理平台,让你轻松分享文本和文件,就像使用网盘一样简单。",
+      "url": "https://cloudpaste.hinswu.cc.cd/",
+      "github_repo": "ling-drag0n/CloudPaste",
+      "icon": "http-icon"
     }
   ],
   "games": [
