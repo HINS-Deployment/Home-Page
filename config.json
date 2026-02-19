@@ -29,63 +29,63 @@
     {
       "name": "H-Monitor Pro",
       "description": "哪吒监控服务器状态仪表板，实时显示服务器运行状态和性能指标",
-      "url": "https://hmp-cfsaas.hinswu.cc.cd",
+      "url": "https://hmp-cfsaas.hinswu.top",
       "github_repo": "nezhahq/nezha",
       "icon": "http-icon"
     },
     {
       "name": "H-Monitor Mirror",
       "description": "哪吒监控镜像节点仪表板，提供备用的服务器状态监控服务",
-      "url": "https://hmm-cfsaas.hinswu.cc.cd",
+      "url": "https://hmm-cfsaas.hinswu.top",
       "github_repo": "nezhahq/nezha",
       "icon": "https://hag.hinswu.cc.cd/apple-touch-icon.png"
     },
     {
       "name": "H-Agent Gateway",
       "description": "哪吒监控Agent安装命令转换工具，支持多平台和多节点配置",
-      "url": "https://hag.hinswu.cc.cd",
+      "url": "https://hag.hinswu.top",
       "github_repo": "WUHINS/H-Agent-Gateway",
       "icon": "http-icon"
     },
     {
       "name": "H-Sentry Pro", 
       "description": "服务状态监控页面，实时展示各类服务的可用性和运行状态",
-      "url": "https://hsp.hinswu.cc.cd",
+      "url": "https://hsp.hinswu.top",
       "github_repo": "louislam/uptime-kuma",
       "icon": "http-icon"
     },
     {
       "name": "H-File Gateway",
       "description": "文件列表和下载服务集成核心，提供文件管理和访问功能",
-      "url": "https://openlist-cfsaas.hinswu.cc.cd",
+      "url": "https://openlist-cfsaas.hinswu.top",
       "github_repo": "OpenListTeam/OpenList",
       "icon": "http-icon"
     },
     {
       "name": "H-AI Gateway Pro",
       "description": "统一的大模型接口网关，集成多种AI模型服务",
-      "url": "https://hagp.hinswu.cc.cd/",
+      "url": "https://hagp.hinswu.top/",
       "github_repo": "QuantumNous/new-api",
       "icon": "http-icon"
     },
     {
       "name": "HINS' SyncTV",
       "description": "自部署同步观影、直播、聊天平台",
-      "url": "https://synctv.hinswu.cc.cd/",
+      "url": "https://synctv.hinswu.top/",
       "github_repo": "synctv-org/synctv",
       "icon": "http-icon"
     },
     {
       "name": "个人书签页",
       "description": "个人网页书签集成管理",
-      "url": "https://onenav.hinswu.dpdns.org/",
+      "url": "https://onenav.hinswu.top/",
       "github_repo": "helloxz/onenav",
       "icon": "http-icon"
     },
     {
       "name": "CloudPaste",
       "description": "现代化的文件分享和内容管理平台,让你轻松分享文本和文件,就像使用网盘一样简单。",
-      "url": "https://cloudpaste.hinswu.cc.cd/",
+      "url": "https://cloudpaste.hinswu.top/",
       "github_repo": "ling-drag0n/CloudPaste",
       "icon": "http-icon"
     }
