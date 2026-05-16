@@ -1,14 +1,14 @@
 # GitHub Actions workflow for building and deploying to GitHub Pages
 name: Build and Deploy to GitHub Pages
 
-on:
+#on:
   # 每天定时运行（UTC时间0点，北京时间8点）
-  schedule:
-    - cron: '0 0 * * *'
+  #schedule:
+    #- cron: '0 0 * * *'
   # 允许手动触发
-  workflow_dispatch:
+  #workflow_dispatch:
   # 当推送到主分支时触发
-  push:
+  #push:
     branches: ['main', 'master']
 
 # 设置权限
